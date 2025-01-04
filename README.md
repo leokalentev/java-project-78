@@ -2,7 +2,7 @@
 
 [![Actions Status](https://github.com/leokalentev/java-project-78/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/leokalentev/java-project-78/actions)
 
-### Build
+### Buil
 
 [![build project](https://github.com/leokalentev/java-project-78/actions/workflows/main.yml/badge.svg)](https://github.com/leokalentev/java-project-78/actions/workflows/main.yml)
 
