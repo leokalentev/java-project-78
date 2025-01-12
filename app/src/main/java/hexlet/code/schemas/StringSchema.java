@@ -25,6 +25,7 @@ public class StringSchema extends BaseSchema<String> {
         return true;
     }
 
+    @Override
     public StringSchema minLength(int length) {
         isMinLength = true;
         newLength = length;
