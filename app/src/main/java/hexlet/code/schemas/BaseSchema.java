@@ -19,4 +19,8 @@ public abstract class BaseSchema<T> {
     public BaseSchema<T> minLength(int length) {
         return this;
     }
+
+    public BaseSchema<T> contains(String substring) {
+        return this;
+    }
 }

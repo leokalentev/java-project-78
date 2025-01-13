@@ -2,8 +2,8 @@ package hexlet.code.schemas;
 
 public class StringSchema extends BaseSchema<String> {
     private boolean isMinLength = false;
-    private int newLength = 0;
-    private String checkContains = null;
+    private int minLengthValue = 0;
+    private String containsSubstring = null;
 
     @Override
     public boolean isValid(String value) {
@@ -13,13 +13,10 @@ public class StringSchema extends BaseSchema<String> {
         if (value == null) {
             return !isRequired;
         }
-        if (isRequired && value.isEmpty()) {
+        if (isMinLength && value.length() < minLengthValue) {
             return false;
         }
-        if (checkContains != null && !value.contains(checkContains)) {
-            return false;
-        }
-        if (isMinLength && value.length() < newLength) {
+        if (containsSubstring != null && !value.contains(containsSubstring)) {
             return false;
         }
         return true;
@@ -28,12 +25,13 @@ public class StringSchema extends BaseSchema<String> {
     @Override
     public StringSchema minLength(int length) {
         isMinLength = true;
-        newLength = length;
+        minLengthValue = length;
         return this;
     }
 
-    public StringSchema contains(String checkContains) {
-        this.checkContains = checkContains;
+    @Override
+    public StringSchema contains(String substring) {
+        containsSubstring = substring;
         return this;
     }
 }

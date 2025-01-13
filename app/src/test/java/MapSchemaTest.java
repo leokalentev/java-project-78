@@ -40,7 +40,7 @@ public class MapSchemaTest {
     void MapSchemaTest4() {
         var schema = v.map();
         Map<String, BaseSchema<String>> schemas = new HashMap<>();
-        schemas.put("firstName", v.string().required());
+        schemas.put("firstName", v.string().required().contains("hn"));
         schemas.put("lastName", v.string().required().minLength(2));
         schema.shape(schemas);
 
