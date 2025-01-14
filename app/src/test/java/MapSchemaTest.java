@@ -15,19 +15,19 @@ public class MapSchemaTest {
 
     @Test
     void mapSchemaTest1() {
-        assertTrue(schema.isValid((Map<String, Object>) null));
+        assertTrue(schema.isValid(null));
     }
 
     @Test
     void mapSchemaTest2() {
         schema.required();
-        assertFalse(schema.isValid((Map<String, Object>) null));
+        assertFalse(schema.isValid(null));
         assertTrue(schema.isValid(new HashMap<>()));
     }
 
     @Test
     void mapSchemaTest3() {
-        Map<String, Object> data = new HashMap<String, Object>();
+        Map<String, Object> data = new HashMap<>();
         data.put("key1", "value1");
         schema.sizeof(2);
         assertFalse(schema.isValid(data));
@@ -58,4 +58,5 @@ public class MapSchemaTest {
         human3.put("lastName", "B");
         assertFalse(schema.isValid(human3));
     }
+
 }
