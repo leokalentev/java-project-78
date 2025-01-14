@@ -10,27 +10,27 @@ public class NumberSchemaTest {
     private NumberSchema schema = v.number();
 
     @Test
-    void NumberSchemaTest1() {
+    void numberSchemaTest1() {
         assertTrue(schema.isValid(null));
         assertTrue(schema.positive().isValid(null));
     }
 
     @Test
-    void NumberSchemaTest2() {
+    void numberSchemaTest2() {
         schema.required();
         assertFalse(schema.isValid(null));
         assertTrue(schema.isValid(10));
     }
 
     @Test
-    void NumberSchemaTest3() {
+    void numberSchemaTest3() {
         schema.required();
         assertFalse(schema.positive().isValid(-10));
         assertFalse(schema.isValid(0));
     }
 
     @Test
-    void NumberSchemaTest4() {
+    void numberSchemaTest4() {
         schema.required();
         schema.range(5, 10);
         assertTrue(schema.isValid(5));

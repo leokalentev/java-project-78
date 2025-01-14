@@ -1,26 +1,19 @@
 package hexlet.code.schemas;
-
 public abstract class BaseSchema<T> {
     protected boolean isRequired = false;
-
-    public boolean isValid(T value) {
+    public abstract boolean isValid(T value);
+    protected boolean basicValidation(T value) {
         if (isRequired) {
-            return value != null && (!(value instanceof String) || !((String) value).isEmpty());
-        } else {
-            return true;
+            if (value == null) {
+                return false;
+            }
+            if (value instanceof String && ((String) value).isEmpty()) {
+                return false;
+            }
         }
+        return true;
     }
 
-    public BaseSchema<T> required() {
-        isRequired = true;
-        return this;
-    }
-
-    public BaseSchema<T> minLength(int length) {
-        return this;
-    }
-
-    public BaseSchema<T> contains(String substring) {
-        return this;
-    }
+    public abstract BaseSchema<T> required();
 }
+

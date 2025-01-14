@@ -11,13 +11,13 @@ public class StringSchemaTest {
     private StringSchema schema = v.string();
     private NumberSchema schema1 = v.number();
     @Test
-    void StringSchemaTest1() {
+    void stringSchemaTest1() {
         assertTrue(schema.isValid(""));
         assertTrue(schema.isValid(null));
     }
 
     @Test
-    void StringSchemaTest2() {
+    void stringSchemaTest2() {
         schema.required();
         assertFalse(schema.isValid(""));
         assertFalse(schema.isValid(null));
@@ -25,7 +25,7 @@ public class StringSchemaTest {
     }
 
     @Test
-    void StringSchemaTest3() {
+    void stringSchemaTest3() {
         schema.required();
         assertFalse(schema.contains("whatthe").isValid("what does the fox say"));
         assertTrue(schema.contains("what").isValid("what does the fox say"));
@@ -34,7 +34,7 @@ public class StringSchemaTest {
     }
 
     @Test
-    void StringSchemaTest4() {
+    void stringSchemaTest4() {
         schema.required();
         assertTrue(schema.minLength(10).minLength(4).isValid("Hexlet"));
     }
