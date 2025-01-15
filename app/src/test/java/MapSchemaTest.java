@@ -27,7 +27,7 @@ public class MapSchemaTest {
 
     @Test
     void mapSchemaTest3() {
-        Map<String, String> data = new HashMap<>();
+        Map<String, Object> data = new HashMap<>();
         data.put("key1", "value1");
         schema.sizeof(2);
         assertFalse(schema.isValid(data));
@@ -41,19 +41,19 @@ public class MapSchemaTest {
         Map<String, BaseSchema<?>> schemas = new HashMap<>();
         schemas.put("firstName", v.string().required().contains("hn"));
         schemas.put("lastName", v.string().required().minLength(2));
-        schema.shape((Map<String, BaseSchema<?>>) schemas);
+        schema.shape(schemas);
 
-        Map<String, String> human1 = new HashMap<>();
+        Map<String, Object> human1 = new HashMap<>();
         human1.put("firstName", "John");
         human1.put("lastName", "Smith");
         assertTrue(schema.isValid(human1));
 
-        Map<String, String> human2 = new HashMap<>();
+        Map<String, Object> human2 = new HashMap<>();
         human2.put("firstName", "John");
         human2.put("lastName", null);
         assertFalse(schema.isValid(human2));
 
-        Map<String, String> human3 = new HashMap<>();
+        Map<String, Object> human3 = new HashMap<>();
         human3.put("firstName", "Anna");
         human3.put("lastName", "B");
         assertFalse(schema.isValid(human3));

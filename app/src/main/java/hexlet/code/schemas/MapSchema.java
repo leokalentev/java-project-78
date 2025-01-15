@@ -3,7 +3,7 @@ package hexlet.code.schemas;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class MapSchema extends BaseSchema<Map<String, String>> {
+public final class MapSchema extends BaseSchema<Map<String, Object>> {
     private int minSize = 0;
     private Map<String, BaseSchema<?>> shapeSchema = new HashMap<>();
 
@@ -14,7 +14,7 @@ public final class MapSchema extends BaseSchema<Map<String, String>> {
     }
 
     @Override
-    public boolean isValid(Map<String, String> value) {
+    public boolean isValid(Map<String, Object> value) {
         if (value == null) {
             return !isRequired;
         }
@@ -24,14 +24,16 @@ public final class MapSchema extends BaseSchema<Map<String, String>> {
         for (Map.Entry<String, BaseSchema<?>> entry : shapeSchema.entrySet()) {
             String key = entry.getKey();
             BaseSchema<?> schema = entry.getValue();
-            String mapValue = value.get(key);
+            Object mapValue = value.get(key);
 
             if (mapValue == null) {
                 if (schema.isRequired()) {
                     return false;
                 }
             } else {
-                if (!((BaseSchema<Object>) schema).isValid(mapValue)) {
+                @SuppressWarnings("unchecked")
+                BaseSchema<Object> typedSchema = (BaseSchema<Object>) schema;
+                if (!typedSchema.isValid(mapValue)) {
                     return false;
                 }
             }
@@ -39,13 +41,12 @@ public final class MapSchema extends BaseSchema<Map<String, String>> {
         return true;
     }
 
-
+    public void shape(Map<String, BaseSchema<?>> schemas) {
+        this.shapeSchema.putAll(schemas);
+    }
     public MapSchema sizeof(int size) {
         this.minSize = size;
         return this;
     }
 
-    public void shape(Map<String, BaseSchema<?>> schemas) {
-        this.shapeSchema = new HashMap<>(schemas);
-    }
 }
