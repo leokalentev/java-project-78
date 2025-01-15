@@ -18,28 +18,23 @@ public final class MapSchema extends BaseSchema<Map<String, Object>> {
         if (value == null) {
             return !isRequired;
         }
-
         if (value.size() < minSize) {
             return false;
         }
-
         for (Map.Entry<String, BaseSchema<?>> entry : shapeSchema.entrySet()) {
             String key = entry.getKey();
             BaseSchema<?> schema = entry.getValue();
             Object mapValue = value.get(key);
-            if (!validateValueWithSchema(mapValue, schema)) {
+
+            if (mapValue == null) {
+                if (schema.isRequired()) {
+                    return false;
+                }
+            } else if (!((BaseSchema<Object>) schema).isValid(mapValue)) {
                 return false;
             }
         }
         return true;
-    }
-
-    private <T> boolean validateValueWithSchema(Object value, BaseSchema<T> schema) {
-        try {
-            return schema.isValid((T) value);
-        } catch (ClassCastException e) {
-            return false;
-        }
     }
 
 

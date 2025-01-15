@@ -58,5 +58,4 @@ public class MapSchemaTest {
         human3.put("lastName", "B");
         assertFalse(schema.isValid(human3));
     }
-
 }
