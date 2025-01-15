@@ -3,7 +3,7 @@ package hexlet.code.schemas;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class MapSchema extends BaseSchema<Map<String, Object>> {
+public final class MapSchema extends BaseSchema<Map<String, String>> {
     private int minSize = 0;
     private Map<String, BaseSchema<?>> shapeSchema = new HashMap<>();
 
@@ -14,7 +14,7 @@ public final class MapSchema extends BaseSchema<Map<String, Object>> {
     }
 
     @Override
-    public boolean isValid(Map<String, Object> value) {
+    public boolean isValid(Map<String, String> value) {
         if (value == null) {
             return !isRequired;
         }
@@ -24,22 +24,21 @@ public final class MapSchema extends BaseSchema<Map<String, Object>> {
         for (Map.Entry<String, BaseSchema<?>> entry : shapeSchema.entrySet()) {
             String key = entry.getKey();
             BaseSchema<?> schema = entry.getValue();
-            Object mapValue = value.get(key);
+            String mapValue = value.get(key);
 
             if (mapValue == null) {
                 if (schema.isRequired()) {
                     return false;
                 }
             } else {
-                @SuppressWarnings("unchecked")
-                BaseSchema<Object> typedSchema = (BaseSchema<Object>) schema;
-                if (!typedSchema.isValid(mapValue)) {
+                if (!((BaseSchema<Object>) schema).isValid(mapValue)) {
                     return false;
                 }
             }
         }
         return true;
     }
+
 
     public MapSchema sizeof(int size) {
         this.minSize = size;
