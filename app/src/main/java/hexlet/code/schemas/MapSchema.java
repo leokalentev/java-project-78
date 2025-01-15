@@ -30,13 +30,16 @@ public final class MapSchema extends BaseSchema<Map<String, Object>> {
                 if (schema.isRequired()) {
                     return false;
                 }
-            } else if (!((BaseSchema<Object>) schema).isValid(mapValue)) {
-                return false;
+            } else {
+                @SuppressWarnings("unchecked")
+                BaseSchema<Object> typedSchema = (BaseSchema<Object>) schema;
+                if (!typedSchema.isValid(mapValue)) {
+                    return false;
+                }
             }
         }
         return true;
     }
-
 
     public MapSchema sizeof(int size) {
         this.minSize = size;
