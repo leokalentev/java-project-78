@@ -37,7 +37,6 @@ public class MapSchemaTest {
 
     @Test
     void mapSchemaTest4() {
-        MapSchema schema = v.map();
         Map<String, BaseSchema<?>> schemas = new HashMap<>();
         schemas.put("firstName", v.string().required().contains("hn"));
         schemas.put("lastName", v.string().required().minLength(2));
