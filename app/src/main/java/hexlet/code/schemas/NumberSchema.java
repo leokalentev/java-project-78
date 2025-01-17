@@ -1,5 +1,6 @@
 package hexlet.code.schemas;
-public class NumberSchema extends BaseSchema<Integer> {
+
+public final class NumberSchema extends BaseSchema<Integer> {
 
     private boolean isPositive = false;
     private boolean isRange = false;
@@ -11,6 +12,7 @@ public class NumberSchema extends BaseSchema<Integer> {
         isRequired = true;
         return this;
     }
+
     @Override
     public boolean isValid(Integer number) {
         if (number == null) {

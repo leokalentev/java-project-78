@@ -30,13 +30,13 @@ public final class StringSchema extends BaseSchema<String> {
     }
 
 
-    public final StringSchema minLength(int length) {
+    public StringSchema minLength(int length) {
         this.isMinLength = true;
         this.minLengthValue = length;
         return this;
     }
 
-    public final StringSchema contains(String substring) {
+    public StringSchema contains(String substring) {
         this.containsSubstring = substring;
         return this;
     }
