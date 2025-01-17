@@ -25,12 +25,15 @@ public final class MapSchema extends BaseSchema<Map<?, ?>> {
             String key = entry.getKey();
             BaseSchema<?> schema = entry.getValue();
             Object mapValue = value.get(key);
+
             if (mapValue == null) {
                 if (schema.isRequired()) {
                     return false;
                 }
             } else {
-                if (!isValueValid(schema, mapValue)) {
+                @SuppressWarnings("unchecked")
+                BaseSchema<Object> typedSchema = (BaseSchema<Object>) schema;
+                if (!typedSchema.isValid(mapValue)) {
                     return false;
                 }
             }
@@ -38,18 +41,14 @@ public final class MapSchema extends BaseSchema<Map<?, ?>> {
         return true;
     }
 
-    @SuppressWarnings("unchecked")
-    private <T> boolean isValueValid(BaseSchema<T> schema, Object value) {
-        try {
-            T castedValue = (T) value;
-            return schema.isValid(castedValue);
-        } catch (ClassCastException e) {
-            return false;
+    public <T> void shape(Map<String, BaseSchema<? extends T>> schemas) {
+        for (Map.Entry<String, BaseSchema<? extends T>> entry : schemas.entrySet()) {
+            @SuppressWarnings("unchecked")
+            BaseSchema<Object> schema = (BaseSchema<Object>) entry.getValue();
+            this.shapeSchema.put(entry.getKey(), schema);
         }
     }
-    public void shape(Map<String, BaseSchema<?>> schemas) {
-        this.shapeSchema.putAll(schemas);
-    }
+
     public MapSchema sizeof(int size) {
         this.minSize = size;
         return this;
