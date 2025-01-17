@@ -41,12 +41,8 @@ public final class MapSchema extends BaseSchema<Map<?, ?>> {
         return true;
     }
 
-    public <T> void shape(Map<String, BaseSchema<? extends T>> schemas) {
-        for (Map.Entry<String, BaseSchema<? extends T>> entry : schemas.entrySet()) {
-            @SuppressWarnings("unchecked")
-            BaseSchema<Object> schema = (BaseSchema<Object>) entry.getValue();
-            this.shapeSchema.put(entry.getKey(), schema);
-        }
+    public void shape(Map<String, ? extends BaseSchema<?>> schemas) {
+        this.shapeSchema.putAll(schemas);
     }
 
     public MapSchema sizeof(int size) {
