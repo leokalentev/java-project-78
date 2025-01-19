@@ -8,9 +8,12 @@ import org.junit.jupiter.params.provider.CsvSource;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
-class MapSchemaTest {
+
+public final class MapSchemaTest {
 
     private final Validator validator = new Validator();
     private final MapSchema schema = validator.map();
