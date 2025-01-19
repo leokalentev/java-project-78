@@ -1,41 +1,54 @@
 import hexlet.code.Validator;
 import hexlet.code.schemas.NumberSchema;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class NumberSchemaTest {
-    private Validator v = new Validator();
-    private NumberSchema schema = v.number();
+
+    private final Validator validator = new Validator();
+    private final NumberSchema schema = validator.number();
 
     @Test
-    void numberSchemaTest1() {
-        assertTrue(schema.isValid(null));
-        assertTrue(schema.positive().isValid(null));
+    void testNullValidation() {
+        boolean resultWithoutPositive = schema.isValid(null);
+        schema.positive();
+        boolean resultWithPositive = schema.isValid(null);
+
+        assertTrue(resultWithoutPositive, "Null should be valid by default");
+        assertTrue(resultWithPositive, "Null should still be valid after applying positive() rule");
     }
 
     @Test
-    void numberSchemaTest2() {
+    void testRequiredValidation() {
         schema.required();
-        assertFalse(schema.isValid(null));
-        assertTrue(schema.isValid(10));
+
+        assertFalse(schema.isValid(null), "Null should be invalid when required");
+        assertTrue(schema.isValid(10), "Positive number should be valid when required");
     }
 
     @Test
-    void numberSchemaTest3() {
-        schema.required();
-        assertFalse(schema.positive().isValid(-10));
-        assertFalse(schema.isValid(0));
+    void testPositiveValidation() {
+        schema.required().positive();
+
+        assertFalse(schema.isValid(-10), "Negative numbers should be invalid when positive() is applied");
+        assertFalse(schema.isValid(0), "Zero should be invalid when positive() is applied");
+        assertTrue(schema.isValid(15), "Positive numbers should be valid when positive() is applied");
     }
 
-    @Test
-    void numberSchemaTest4() {
-        schema.required();
-        schema.range(5, 10);
-        assertTrue(schema.isValid(5));
-        assertTrue(schema.isValid(10));
-        assertFalse(schema.isValid(4));
-        assertFalse(schema.isValid(11));
+    @ParameterizedTest
+    @CsvSource({
+            "5, true",
+            "10, true",
+            "4, false",
+            "11, false"
+    })
+    void testRangeValidation(int value, boolean expected) {
+        schema.required().range(5, 10);
+        boolean result = schema.isValid(value);
+
+        assertEquals(expected, result, "Range validation failed for value: " + value);
     }
 }

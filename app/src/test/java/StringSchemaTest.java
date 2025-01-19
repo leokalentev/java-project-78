@@ -1,41 +1,53 @@
 import hexlet.code.Validator;
-import hexlet.code.schemas.NumberSchema;
 import hexlet.code.schemas.StringSchema;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class StringSchemaTest {
-    private Validator v = new Validator();
-    private StringSchema schema = v.string();
-    private NumberSchema schema1 = v.number();
+
+    private final Validator validator = new Validator();
+    private final StringSchema schema = validator.string();
+
     @Test
-    void stringSchemaTest1() {
-        assertTrue(schema.isValid(""));
-        assertTrue(schema.isValid(null));
+    void testNullAndEmptyValidation() {
+        boolean resultForNull = schema.isValid(null);
+        boolean resultForEmpty = schema.isValid("");
+
+        assertTrue(resultForNull, "Null should be valid by default");
+        assertTrue(resultForEmpty, "Empty string should be valid by default");
     }
 
     @Test
-    void stringSchemaTest2() {
+    void testRequiredValidation() {
         schema.required();
-        assertFalse(schema.isValid(""));
-        assertFalse(schema.isValid(null));
-        assertTrue(schema.isValid("hexlet"));
+
+        assertFalse(schema.isValid(null), "Null should be invalid when required");
+        assertFalse(schema.isValid(""), "Empty string should be invalid when required");
+        assertTrue(schema.isValid("hexlet"), "Non-empty string should be valid when required");
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "what does the fox say, what, true",
+            "what does the fox say, fox, true",
+            "what does the fox say, hexlet, false",
+            "hexlet, hexlet, true"
+    })
+    void testContainsValidation(String input, String substring, boolean expected) {
+        schema.required().contains(substring);
+        boolean result = schema.isValid(input);
+
+        assertEquals(expected, result, "Validation failed for input: '" + input + "', substring: '" + substring + "'");
     }
 
     @Test
-    void stringSchemaTest3() {
+    void testMinLengthValidation() {
         schema.required();
-        assertFalse(schema.contains("whatthe").isValid("what does the fox say"));
-        assertTrue(schema.contains("what").isValid("what does the fox say"));
-        assertFalse(schema.contains("whatthe").isValid("what does the fox say"));
-        assertFalse(schema.isValid("what does the fox say"));
-    }
 
-    @Test
-    void stringSchemaTest4() {
-        schema.required();
-        assertTrue(schema.minLength(10).minLength(4).isValid("Hexlet"));
+        assertFalse(schema.minLength(10).isValid("Hexlet"), "String shorter than minLength should be invalid");
+        assertTrue(schema.minLength(4).isValid("Hexlet"), "String longer than minLength should be valid");
     }
 }
