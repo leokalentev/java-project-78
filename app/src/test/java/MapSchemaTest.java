@@ -58,7 +58,7 @@ public final class MapSchemaTest {
         data.put("lastName", lastName);
 
         boolean result = schema.isValid(data);
-        assertEquals(expected, result, "Validation failed for input: firstName=" + firstName + ", lastName=" +
-                lastName);
+        assertEquals(expected, result, "Validation failed for input: firstName=" + firstName + ", lastName="
+                + lastName);
     }
 }
