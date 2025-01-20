@@ -3,7 +3,7 @@ import hexlet.code.schemas.BaseSchema;
 import hexlet.code.schemas.MapSchema;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +11,6 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-
 
 public final class MapSchemaTest {
 
@@ -34,10 +33,7 @@ public final class MapSchemaTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "1, false",
-            "2, true"
-    })
+    @CsvFileSource(resources = "/map1_csv.csv", numLinesToSkip = 1)
     void testSizeValidation(int mapSize, boolean expected) {
         schema.sizeof(2);
         Map<String, Object> data = new HashMap<>();
@@ -49,21 +45,19 @@ public final class MapSchemaTest {
         assertEquals(expected, result, "Map size validation failed");
     }
 
-    @Test
-    void testShapeValidationPositiveAndNegativeCases() {
+    @ParameterizedTest
+    @CsvFileSource(resources = "/map2_csv.csv", numLinesToSkip = 1)
+    void testShapeValidationFromCsv(String firstName, String lastName, boolean expected) {
         Map<String, BaseSchema<?>> schemas = new HashMap<>();
         schemas.put("firstName", validator.string().required().contains("hn"));
         schemas.put("lastName", validator.string().required().minLength(2));
         schema.shape(schemas);
 
-        Map<String, Object> validData = Map.of("firstName", "John", "lastName", "Smith");
-        Map<String, Object> invalidData1 = new HashMap<>();
-        invalidData1.put("firstName", "John");
-        invalidData1.put("lastName", null);
-        Map<String, Object> invalidData2 = Map.of("firstName", "Anna", "lastName", "B");
+        Map<String, Object> data = new HashMap<>();
+        data.put("firstName", firstName);
+        data.put("lastName", lastName);
 
-        assertTrue(schema.isValid(validData), "Valid data should pass validation");
-        assertFalse(schema.isValid(invalidData1), "Invalid data with null lastName should fail validation");
-        assertFalse(schema.isValid(invalidData2), "Invalid data with too short lastName should fail validation");
+        boolean result = schema.isValid(data);
+        assertEquals(expected, result, "Validation failed for input: firstName=" + firstName + ", lastName=" + lastName);
     }
 }

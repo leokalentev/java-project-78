@@ -2,12 +2,11 @@ import hexlet.code.Validator;
 import hexlet.code.schemas.NumberSchema;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-
 
 public final class NumberSchemaTest {
 
@@ -42,12 +41,7 @@ public final class NumberSchemaTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "5, true",
-            "10, true",
-            "4, false",
-            "11, false"
-    })
+    @CsvFileSource(resources = "/number_csv.csv", numLinesToSkip = 1)
     void testRangeValidation(int value, boolean expected) {
         schema.required().range(5, 10);
         boolean result = schema.isValid(value);

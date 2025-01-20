@@ -2,12 +2,11 @@ import hexlet.code.Validator;
 import hexlet.code.schemas.StringSchema;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-
 
 public final class StringSchemaTest {
 
@@ -33,12 +32,7 @@ public final class StringSchemaTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "what does the fox say, what, true",
-            "what does the fox say, fox, true",
-            "what does the fox say, hexlet, false",
-            "hexlet, hexlet, true"
-    })
+    @CsvFileSource(resources = "/string_csv.csv", numLinesToSkip = 1)
     void testContainsValidation(String input, String substring, boolean expected) {
         schema.required().contains(substring);
         boolean result = schema.isValid(input);
